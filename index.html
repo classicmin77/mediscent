@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Emotion Scent Curator – UI Prototype</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 24px 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Pretendard", system-ui, sans-serif;
+      background: #f4f6f7;
+      color: #111;
+    }
+    .app {
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    .screen {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 24px 20px 28px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      margin: 0 16px 32px;
+    }
+    .screen-header {
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      margin-bottom: 4px;
+    }
+    h1, h2, h3 {
+      margin: 0;
+    }
+    .title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #ecf3f1;
+      color: #4b5563;
+      font-size: 12px;
+      margin-bottom: 14px;
+    }
+    .pill span.icon {
+      font-size: 14px;
+    }
+
+    /* cards & layout */
+    .row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .col-3 {
+      flex: 1;
+    }
+    .card {
+      background: #f5f7fa;
+      border-radius: 18px;
+      padding: 14px 14px 16px;
+    }
+    .card-soft {
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 14px 14px 16px;
+      border: 1px solid #e5e7eb;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #4b5563;
+    }
+    .card-value {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .card-note {
+      font-size: 12px;
+      color: #6b7280;
+      line-height: 1.4;
+    }
+
+    /* buttons */
+    .btn-primary {
+      display: block;
+      width: 100%;
+      margin-top: 24px;
+      padding: 13px 0;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #9dc2b8, #7ca99b);
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .btn-primary:active {
+      opacity: 0.9;
+    }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      padding: 5px 10px;
+      font-size: 12px;
+      color: #6b7280;
+      cursor: pointer;
+    }
+    .btn-small {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: none;
+      background: #e2f0ec;
+      color: #1f2933;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* sliders */
+    .slider-group {
+      margin-bottom: 16px;
+    }
+    .slider-label {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .slider-label span.sub {
+      font-size: 11px;
+      color: #9ca3af;
+      font-weight: 400;
+    }
+    input[type="range"] {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 4px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #9dc2b8;
+      border: 3px solid #ffffff;
+      box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.6);
+      cursor: pointer;
+    }
+
+    /* capture blocks */
+    .capture-block {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: #f9fafb;
+      border: 1px dashed #d1d5db;
+    }
+    .capture-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #ecf3f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .capture-text-main {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+    .capture-text-sub {
+      font-size: 11px;
+      color: #6b7280;
+    }
+    .capture-status {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+
+    /* status tags */
+    .status-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: #eef2ff;
+      color: #4f46e5;
+      margin-top: 6px;
+    }
+    .status-tag.ok {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    /* recommendation cards */
+    .scent-card {
+      border-radius: 18px;
+      padding: 14px 14px 16px;
+      background: #f5f7fa;
+      margin-bottom: 12px;
+    }
+    .scent-card.main {
+      background: #ecf3f1;
+      border: 1px solid #d1e4de;
+    }
+    .scent-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: #e5f1ee;
+      color: #3f4f4a;
+      margin-bottom: 6px;
+    }
+    .scent-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .scent-notes {
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 4px;
+    }
+    .scent-desc {
+      font-size: 12px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+    .scent-meta {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .divider-label {
+      font-size: 11px;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin: 18px 0 8px;
+    }
+
+    .mt-8 { margin-top: 8px; }
+    .mt-12 { margin-top: 12px; }
+    .mt-16 { margin-top: 16px; }
+    .mt-20 { margin-top: 20px; }
+    .text-right { text-align: right; }
+
+    /* history */
+    .history-date {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-bottom: 4px;
+    }
+    .history-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #ecf3f1;
+      font-size: 11px;
+      color: #4b5563;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- SCREEN 1: Onboarding -->
+  <section class="screen" id="screen-0">
+    <div class="screen-header">AI Emotion Scent Curator</div>
+    <div class="title">얼굴과 목소리로<br>오늘의 향을 큐레이션해요</div>
+    <p class="subtitle">
+      Google Vision 얼굴 감정과 Hume 음성 감정 엔진을 활용해<br>
+      주인님의 상태에 가장 잘 맞는 향 노트를 제안합니다.
+    </p>
+
+    <div class="row">
+      <div class="col-3">
+        <div class="card-soft">
+          <div class="card-title">감정 인식</div>
+          <div class="card-note">얼굴 표정 기반<br>Vision Emotion</div>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="card-soft">
+          <div class="card-title">음성 감정</div>
+          <div class="card-note">목소리 톤 기반<br>Hume Voice</div>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="card-soft">
+          <div class="card-title">향 매칭</div>
+          <div class="card-note">현재 감정과<br>향 노트 매칭</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-primary" data-next-screen="1">
+      오늘의 감정 측정 시작하기
+    </button>
+  </section>
+
+  <!-- SCREEN 2: Emotion Input + Capture -->
+  <section class="screen" id="screen-1">
+    <div class="screen-header">Step 1 of 3</div>
+    <div class="title">오늘 주인님의 상태를 알려주세요</div>
+    <p class="subtitle">
+      간단한 슬라이더와 얼굴, 음성 기록을 기반으로<br>
+      감정 프로필을 생성합니다.
+    </p>
+
+    <!-- sliders -->
+    <div class="pill"><span class="icon">🧠</span>기본 감정 설문</div>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        긴장 ↔ 이완
+        <span class="sub">오늘 전반적인 긴장감</span>
+      </div>
+      <input type="range" min="0" max="100" value="70">
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        우울 ↔ 활력
+        <span class="sub">기분과 에너지</span>
+      </div>
+      <input type="range" min="0" max="100" value="30">
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        집중 ↔ 산만
+        <span class="sub">생각의 선명함</span>
+      </div>
+      <input type="range" min="0" max="100" value="55">
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        예민 ↔ 안정
+        <span class="sub">감정 기복 정도</span>
+      </div>
+      <input type="range" min="0" max="100" value="65">
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        피로 ↔ 회복
+        <span class="sub">몸 · 마음 피로감</span>
+      </div>
+      <input type="range" min="0" max="100" value="80">
+    </div>
+
+    <!-- face capture -->
+    <div class="divider-label">FACE · VISION API</div>
+    <div class="capture-block">
+      <div class="capture-icon">📷</div>
+      <div style="flex:1;">
+        <div class="capture-text-main">얼굴 감정 분석</div>
+        <div class="capture-text-sub">
+          3초 동안 카메라를 바라봐 주세요. Vision API가 joy / anger / sorrow 등을 분석합니다.
+        </div>
+        <div class="capture-status">상태: 아직 촬영 전</div>
+      </div>
+      <button class="btn-small">얼굴 캡처</button>
+    </div>
+
+    <!-- voice capture -->
+    <div class="divider-label">VOICE · HUME AI</div>
+    <div class="capture-block">
+      <div class="capture-icon">🎙️</div>
+      <div style="flex:1;">
+        <div class="capture-text-main">음성 감정 분석</div>
+        <div class="capture-text-sub">
+          지금 기분을 한 문장으로 말해 주세요. Hume가 calmness / stress / energy를 계산합니다.
+        </div>
+        <div class="capture-status">상태: 아직 녹음 전</div>
+      </div>
+      <button class="btn-small">녹음 시작</button>
+    </div>
+
+    <div class="mt-12 text-right">
+      <button class="btn-ghost">얼굴·음성 없이 설문만 진행</button>
+    </div>
+
+    <button
+      class="btn-primary"
+      data-action="analyze-emotion"
+      data-next-screen="2"
+    >
+      AI 감정 분석하기
+    </button>
+  </section>
+
+  <!-- SCREEN 3: Analyzing -->
+  <section class="screen" id="screen-2">
+    <div class="screen-header">Step 2 of 3</div>
+    <div class="title">AI가 감정을 읽는 중입니다</div>
+    <p class="subtitle">
+      얼굴 · 음성 · 설문 데이터를 Vision · Hume 엔진으로 분석해<br>
+      주인님의 현재 상태를 정밀하게 측정하고 있어요.
+    </p>
+
+    <div class="card" style="text-align:center; padding:26px 16px;">
+      <div style="font-size:40px; margin-bottom:8px;">🌫️</div>
+      <div style="font-size:14px; font-weight:500; margin-bottom:4px;">
+        Emotion Profile Synthesizing...
+      </div>
+      <div class="card-note">
+        긴장 · 활력 · 집중 · 피로 · 예민도의 균형을 계산 중입니다.
+      </div>
+    </div>
+
+    <div class="row mt-16">
+      <div class="col-3">
+        <div class="card-soft">
+          <div class="card-title">Face · Vision</div>
+          <div class="card-note">joy, anger, sorrow<br>likelihood 분석</div>
+          <div class="status-tag"><span>●</span>분석 중</div>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="card-soft">
+          <div class="card-title">Voice · Hume</div>
+          <div class="card-note">calmness, stress,<br>energy 분석</div>
+          <div class="status-tag ok"><span>✔</span>업로드 완료</div>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="card-soft">
+          <div class="card-title">Survey</div>
+          <div class="card-note">슬라이더 설문<br>값 통합</div>
+          <div class="status-tag ok"><span>✔</span>입력 완료</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="subtitle" style="margin-top:18px; margin-bottom:0; font-size:12px;">
+      ※ 실제 서비스에서는 이 화면이 2~4초 정도 노출됩니다.
+    </p>
+  </section>
+
+  <!-- SCREEN 4: Emotion Result -->
+  <section class="screen" id="screen-3">
+    <div class="screen-header">Step 3 of 3</div>
+    <div class="title">오늘의 감정 리포트</div>
+    <p class="subtitle" id="emotion-summary">
+      얼굴·목소리·설문을 모두 고려했을 때,<br>
+      오늘 주인님은 <b>긴장도와 피로도는 높고, 활력은 낮은 상태</b>로 보여요.
+    </p>
+
+    <div class="row">
+      <div class="col-3">
+        <div class="card">
+          <div class="card-title">긴장도</div>
+          <div class="card-value" id="value-tension">78 / 100</div>
+          <div class="card-note" id="note-tension">스트레스가 다소 높은 편이에요.</div>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="card">
+          <div class="card-title">활력</div>
+          <div class="card-value" id="value-vitality">32 / 100</div>
+          <div class="card-note" id="note-vitality">에너지가 많이 떨어져 있습니다.</div>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="card">
+          <div class="card-title">집중력</div>
+          <div class="card-value" id="value-focus">55 / 100</div>
+          <div class="card-note" id="note-focus">집중이 조금 분산된 상태예요.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        <div class="card">
+          <div class="card-title">예민도</div>
+          <div class="card-value" id="value-sensitivity">64 / 100</div>
+          <div class="card-note" id="note-sensitivity">작은 자극에도 예민할 수 있어요.</div>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="card">
+          <div class="card-title">피로도</div>
+          <div class="card-value" id="value-fatigue">82 / 100</div>
+          <div class="card-note" id="note-fatigue">몸과 마음 모두 휴식이 필요합니다.</div>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="card-soft">
+          <div class="card-title">분석 엔진</div>
+          <div class="card-note">
+            Face: Vision<br>
+            Voice: Hume<br>
+            Text: GPT
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-primary" data-next-screen="4">
+      이 감정에 맞는 향 추천 받기
+    </button>
+
+    <div class="mt-12">
+      <button class="btn-ghost" data-next-screen="5">지난 감정 · 향 기록 보기</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 5: Scent Recommendation -->
+  <section class="screen" id="screen-4">
+    <div class="screen-header">Scent Recommendation</div>
+    <div class="title">오늘 주인님에게 어울리는 향</div>
+    <p class="subtitle">
+      높은 긴장도와 피로도를 완화하면서<br>
+      과도한 자극 없이 안정감을 주는 조합을 골랐어요.
+    </p>
+
+    <div class="pill">
+      <span class="icon">🌿</span>
+      <span id="scent-keyword">긴장 완화 · 피로 회복 포커스</span>
+    </div>
+
+    <div class="scent-card main">
+      <div class="scent-tag">메인 추천</div>
+      <div class="scent-name" id="main-scent-name">Relaxing Floral</div>
+      <div class="scent-notes" id="main-scent-notes">
+        라벤더 · 카모마일 · 네롤리 · 샌달우드
+      </div>
+      <div class="scent-desc" id="main-scent-desc">
+        과부하된 신경을 부드럽게 눌러주는 진정 플로럴 우디 블렌드로,
+        잠들기 전 혹은 과하게 긴장된 하루의 끝에 쓰기 좋습니다.
+      </div>
+      <div class="scent-meta" id="main-scent-meta">
+        기준: 긴장도 78 · 피로도 82 · 예민도 64
+      </div>
+    </div>
+
+    <!-- 고정 서브 향 추천 -->
+    <div class="scent-card">
+      <div class="scent-name">Energy Herb</div>
+      <div class="scent-notes">페퍼민트 · 로즈마리 · 라임</div>
+      <div class="scent-desc">
+        피로로 무거워진 몸과 머리를 가볍게 깨워주는 허브 시트러스 조합입니다.
+        오후 시간 혹은 작업 전 리프레시에 적합합니다.
+      </div>
+      <div class="scent-meta">
+        기준: 피로도 82 · 집중력 55
+      </div>
+    </div>
+
+    <div class="scent-card">
+      <div class="scent-name">Soft Citrus-Tea</div>
+      <div class="scent-notes">그린티 · 화이트티 · 시트러스</div>
+      <div class="scent-desc">
+        기분을 살짝 띄워주되 과자극 없이 잔잔하게 유지시켜 주는 티 베이스 시트러스입니다.
+      </div>
+      <div class="scent-meta">
+        기준: 활력 32 · calmness 중간대
+      </div>
+    </div>
+
+    <!-- 감정에 따라 자동으로 바뀌는 제품 라인업 -->
+    <div class="divider-label">RECOMMENDED LINE-UP</div>
+    <div id="product-list"></div>
+
+    <button class="btn-primary">추천 향 라인업 제품 보러가기</button>
+
+    <div class="mt-12">
+      <button class="btn-ghost" data-next-screen="5">지난 감정 · 향 기록 보기</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 6: History -->
+  <section class="screen" id="screen-5">
+    <div class="screen-header">History</div>
+    <div class="title">지난 감정 · 향 기록</div>
+    <p class="subtitle">
+      최근에 측정한 감정 프로필과 그때 추천되었던 향을<br>
+      간단한 로그 형태로 보여줍니다.
+    </p>
+
+    <div id="history-list"></div>
+
+    <button class="btn-primary" data-next-screen="0">
+      다시 감정 측정하러 가기
+    </button>
+  </section>
+
+</div>
+
+<script>
+  // ----- 화면 전환 로직 -----
+  const screens = document.querySelectorAll('.screen');
+  let currentScreenIndex = 0;
+  let emotionProfile = null;
+
+  function showScreen(index) {
+    screens.forEach((screen, i) => {
+      screen.style.display = i === index ? 'block' : 'none';
+    });
+    currentScreenIndex = index;
+
+    // 히스토리 화면에 들어올 때마다 새로 렌더링
+    if (index === 5) {
+      renderHistoryList();
+    }
+  }
+
+  // ----- 슬라이더 값 → 감정 프로필 계산 -----
+  function calculateEmotionFromSliders() {
+    const sliders = document.querySelectorAll('.slider-group input[type="range"]');
+    if (sliders.length < 5) {
+      return null;
+    }
+
+    const values = Array.from(sliders).map(slider => Number(slider.value) || 0);
+
+    const tension = values[0];      // 긴장도
+    const vitality = values[1];     // 활력
+    const focus = values[2];        // 집중력
+    const sensitivity = values[3];  // 예민도
+    const fatigue = values[4];      // 피로도
+
+    return { tension, vitality, focus, sensitivity, fatigue };
+  }
+
+  // ----- 점수에 따라 설명 문구 생성 -----
+  function getNote(type, score) {
+    if (type === 'tension') {
+      if (score < 30) return '전반적으로 긴장감이 낮고 여유로운 상태예요.';
+      if (score < 60) return '약간의 긴장은 있지만 무리 없는 수준이에요.';
+      return '스트레스와 긴장이 다소 높은 편이에요.';
+    }
+    if (type === 'vitality') {
+      if (score < 30) return '에너지가 많이 떨어져 있고 무기력함이 느껴질 수 있어요.';
+      if (score < 60) return '에너지가 보통 수준이며 일상 활동은 무리 없이 가능해요.';
+      return '활력이 좋은 편이라 새로운 일에 도전하기 좋은 상태예요.';
+    }
+    if (type === 'focus') {
+      if (score < 30) return '집중이 잘 되지 않고 산만하게 느껴질 수 있어요.';
+      if (score < 60) return '집중과 분산이 오가는 보통 수준이에요.';
+      return '집중력이 잘 유지되는 편이에요.';
+    }
+    if (type === 'sensitivity') {
+      if (score < 30) return '자극에 비교적 둔감하고, 감정이 쉽게 흔들리지 않는 편이에요.';
+      if (score < 60) return '감정 기복이 있지만 전체적으로는 관리 가능한 수준이에요.';
+      return '작은 자극에도 예민하게 반응할 수 있는 상태예요.';
+    }
+    if (type === 'fatigue') {
+      if (score < 30) return '피로도가 낮고 몸과 마음이 비교적 가벼운 상태예요.';
+      if (score < 60) return '적당한 피로가 있지만 회복 가능한 수준이에요.';
+      return '몸과 마음 모두 휴식이 꼭 필요한 수준의 피로예요.';
+    }
+    return '';
+  }
+
+  // ----- 요약 문장 생성 -----
+  function buildSummary(profile) {
+    const parts = [];
+
+    if (profile.tension > 60) {
+      parts.push('긴장도는 높은 편이고');
+    } else if (profile.tension < 30) {
+      parts.push('긴장도는 낮고 꽤 여유로운 편이고');
+    } else {
+      parts.push('긴장도는 보통 수준이고');
+    }
+
+    if (profile.vitality < 40) {
+      parts.push('활력은 다소 떨어져 있으며');
+    } else if (profile.vitality > 60) {
+      parts.push('활력은 좋은 편이며');
+    } else {
+      parts.push('활력은 무난한 수준이며');
+    }
+
+    if (profile.fatigue > 60) {
+      parts.push('피로도는 높은 상태예요.');
+    } else if (profile.fatigue < 35) {
+      parts.push('피로도는 낮은 편이에요.');
+    } else {
+      parts.push('피로도는 보통 수준이에요.');
+    }
+
+    return parts.join(' ');
+  }
+
+  // ----- 감정 리포트 화면 업데이트 -----
+  function updateEmotionResultUI(profile) {
+    const summaryEl = document.getElementById('emotion-summary');
+    if (summaryEl) {
+      const summary = buildSummary(profile);
+      summaryEl.innerHTML =
+        `얼굴·목소리·설문을 모두 고려했을 때,<br>오늘 주인님은 <b>${summary}</b>`;
+    }
+
+    const tensionValueEl = document.getElementById('value-tension');
+    const vitalityValueEl = document.getElementById('value-vitality');
+    const focusValueEl = document.getElementById('value-focus');
+    const sensitivityValueEl = document.getElementById('value-sensitivity');
+    const fatigueValueEl = document.getElementById('value-fatigue');
+
+    const tensionNoteEl = document.getElementById('note-tension');
+    const vitalityNoteEl = document.getElementById('note-vitality');
+    const focusNoteEl = document.getElementById('note-focus');
+    const sensitivityNoteEl = document.getElementById('note-sensitivity');
+    const fatigueNoteEl = document.getElementById('note-fatigue');
+
+    if (tensionValueEl) tensionValueEl.textContent = `${profile.tension} / 100`;
+    if (vitalityValueEl) vitalityValueEl.textContent = `${profile.vitality} / 100`;
+    if (focusValueEl) focusValueEl.textContent = `${profile.focus} / 100`;
+    if (sensitivityValueEl) sensitivityValueEl.textContent = `${profile.sensitivity} / 100`;
+    if (fatigueValueEl) fatigueValueEl.textContent = `${profile.fatigue} / 100`;
+
+    if (tensionNoteEl) tensionNoteEl.textContent = getNote('tension', profile.tension);
+    if (vitalityNoteEl) vitalityNoteEl.textContent = getNote('vitality', profile.vitality);
+    if (focusNoteEl) focusNoteEl.textContent = getNote('focus', profile.focus);
+    if (sensitivityNoteEl) sensitivityNoteEl.textContent = getNote('sensitivity', profile.sensitivity);
+    if (fatigueNoteEl) fatigueNoteEl.textContent = getNote('fatigue', profile.fatigue);
+  }
+
+  // 🔥 감정 프로필 → 향 + 제품 추천 설정 계산
+  function getScentConfig(profile) {
+    const { tension, vitality, focus, sensitivity, fatigue } = profile;
+
+    // A. 과긴장 + 과피로 + 저활력
+    if (tension >= 70 && fatigue >= 70 && vitality <= 40) {
+      return {
+        keyword: '긴장 완화 · 피로 회복 포커스',
+        name: 'Relaxing Floral',
+        notes: '라벤더 · 카모마일 · 네롤리 · 샌달우드',
+        desc: '과도한 긴장과 피로로 과부하된 신경계를 부드럽게 안정시켜 주는 플로럴 우디 조합입니다. 잠들기 전, 쉬는 날 루틴에 잘 어울려요.',
+        products: [
+          {
+            name: 'MF-01 Deep Sleep Perfume',
+            type: '오 드 퍼퓸',
+            usage: 'Night / Sleep',
+            desc: '수면 전 목·손목에 가볍게 사용하는 딥 릴랙스 퍼퓸.'
+          },
+          {
+            name: 'MD-01 Night Calm Diffuser',
+            type: '디퓨저',
+            usage: 'Bedside',
+            desc: '침실 사이드 테이블용, 라벤더·카모마일 중심의 수면 디퓨저.'
+          },
+          {
+            name: 'MS-01 Pillow Mist',
+            type: '필로우 미스트',
+            usage: 'Pillow & Bedding',
+            desc: '베개와 침구에 분사해 수면 무드를 만들어 주는 미스트.'
+          }
+        ]
+      };
+    }
+
+    // B. 예민도 높고 약간 긴장된 상태
+    if (sensitivity >= 65 && tension >= 55) {
+      return {
+        keyword: '신경 안정 · 감정 보호',
+        name: 'Soft Cocoon Musk',
+        notes: '아이리스 · 화이트머스크 · 바닐라 · 캐시미어 우드',
+        desc: '작은 자극에도 예민해지기 쉬운 날, 스스로를 감싸 안듯 부드러운 코쿤을 만들어 주는 파우더리 머스크 계열입니다.',
+        products: [
+          {
+            name: 'CM-01 Cocoon Musk Perfume',
+            type: '오 드 퍼퓸',
+            usage: 'Daily / Office',
+            desc: '타인에게 과하지 않으면서도 본인은 편안하게 느끼는 소프트 머스크 향.'
+          },
+          {
+            name: 'CR-01 Comfort Room Spray',
+            type: '룸 스프레이',
+            usage: 'Home',
+            desc: '예민한 날, 공간 공기를 부드럽게 바꿔주는 코지 무드 스프레이.'
+          },
+          {
+            name: 'CH-01 Cozy Hair Mist',
+            type: '헤어 미스트',
+            usage: 'On-the-go',
+            desc: '외출·미팅 전후로 사용하기 좋은 보송한 헤어 머스크 미스트.'
+          }
+        ]
+      };
+    }
+
+    // C. 긴장 낮고, 활력 높고, 피로도 낮음 – 리프트업 & 포커스
+    if (vitality >= 65 && tension <= 45 && fatigue <= 55) {
+      return {
+        keyword: '집중력 · 긍정 에너지 포커스',
+        name: 'Bright Citrus Green',
+        notes: '베르가못 · 만다린 · 그린티 · 머스크',
+        desc: '맑은 시트러스와 가벼운 그린티 노트가 산뜻하게 기분을 끌어올리고, 집중력을 유지하도록 돕는 데일리 시그니처 향입니다.',
+        products: [
+          {
+            name: 'BC-01 Focus Day Perfume',
+            type: '오 드 퍼퓸',
+            usage: 'Work / Study',
+            desc: '업무·집중 타임에 사용하기 좋은 시트러스 그린 퍼퓸.'
+          },
+          {
+            name: 'BC-02 Productivity Diffuser',
+            type: '디퓨저',
+            usage: 'Desk',
+            desc: '책상 위에 두고 쓰는, 머리를 맑게 하는 데이타임 디퓨저.'
+          },
+          {
+            name: 'BC-03 Pocket Roller',
+            type: '롤온 오일',
+            usage: 'On-the-go',
+            desc: '회의 전·발표 전, 손목·관자놀이에 사용하는 포켓 롤온.'
+          }
+        ]
+      };
+    }
+
+    // D. 머리가 멍하고 피로한 상태 – 클리어 허브
+    if (focus <= 40 && fatigue >= 60) {
+      return {
+        keyword: '두뇌 클리어 · 멘탈 리셋',
+        name: 'Clarity Herb',
+        notes: '로즈마리 · 유칼립투스 · 바질 · 레몬필',
+        desc: '머리가 잘 돌아가지 않고 멍한 날, 허브 아로마와 상쾌한 레몬필이 안개 낀 듯한 머릿속을 가볍게 정리해 줍니다.',
+        products: [
+          {
+            name: 'CL-01 Brain Wake Mist',
+            type: '페이스 & 에어 미스트',
+            usage: 'Morning / Afternoon',
+            desc: '오전·오후 슬럼프 타임에 얼굴·공간에 가볍게 뿌리는 리프레시 미스트.'
+          },
+          {
+            name: 'CL-02 Deep Focus Oil',
+            type: '롤온 오일',
+            usage: 'Focus',
+            desc: '관자놀이·손목에 사용하는 집중력 보조 허브 오일.'
+          },
+          {
+            name: 'CL-03 Shower Tablet',
+            type: '샤워 태블릿',
+            usage: 'Shower',
+            desc: '샤워 시 바닥에 두고 쓰는 허브 스팀 샤워 태블릿.'
+          }
+        ]
+      };
+    }
+
+    // E. 긴장은 낮은데, 기운이 빠져 있는 상태 – 부드러운 리프트
+    if (vitality <= 40 && tension <= 50 && fatigue <= 65) {
+      return {
+        keyword: '부드러운 기분 리프트',
+        name: 'Soft Citrus Tea',
+        notes: '그린티 · 화이트티 · 시트러스',
+        desc: '감정선은 나쁘지 않지만 기운이 빠져 있을 때, 잔잔한 티 베이스 시트러스가 과자극 없이 기분을 살짝 띄워줍니다.',
+        products: [
+          {
+            name: 'ST-01 Tea Mood Perfume',
+            type: '오 드 퍼퓸',
+            usage: 'Daily',
+            desc: '티 향을 좋아하는 사용자를 위한 소프트 시트러스 티 퍼퓸.'
+          },
+          {
+            name: 'ST-02 Tea Time Candle',
+            type: '캔들',
+            usage: 'Home / Reading',
+            desc: '독서·휴식 시간에 어울리는 그린티·화이트티 캔들.'
+          },
+          {
+            name: 'ST-03 Mood Spray',
+            type: '룸 & 패브릭 스프레이',
+            usage: 'Fabric / Room',
+            desc: '소파·커튼·침구에 사용 가능한 데일리 티 베이스 스프레이.'
+          }
+        ]
+      };
+    }
+
+    // F. 기본값 – 애매한 중간 상태: 밸런스 유지
+    return {
+      keyword: '마음 균형 · 데일리 밸런스',
+      name: 'Balanced Woody Musk',
+      notes: '피그리프 · 아이리스 · 시더우드 · 소프트 머스크',
+      desc: '감정의 상하를 부드럽게 정돈해 주는 데일리용 밸런싱 향입니다. 사무실과 집, 어디서든 안정적인 무드를 만들어 줍니다.',
+      products: [
+        {
+          name: 'BM-01 Signature Perfume',
+          type: '오 드 퍼퓸',
+          usage: 'All-day',
+          desc: '과하지 않게 존재감을 남기는 데일리 밸런스 시그니처 퍼퓸.'
+        },
+        {
+          name: 'BM-02 Office Diffuser',
+          type: '디퓨저',
+          usage: 'Office',
+          desc: '업무 공간에서 장시간 사용해도 부담 없는 우디 머스크 디퓨저.'
+        },
+        {
+          name: 'BM-03 Car Scent Clip',
+          type: '카 디퓨저',
+          usage: 'Car',
+          desc: '운전 중 감정선을 안정적으로 유지해 주는 카 디퓨저.'
+        }
+      ]
+    };
+  }
+
+  // 🔥 제품 카드 렌더링
+  function renderProductList(products) {
+    const container = document.getElementById('product-list');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    if (!products || products.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'scent-card';
+      empty.innerHTML = '<div class="scent-desc">현재 프로필에 맞는 제품 라인업 정보가 없습니다.</div>';
+      container.appendChild(empty);
+      return;
+    }
+
+    products.forEach((p) => {
+      const card = document.createElement('div');
+      card.className = 'scent-card';
+      card.innerHTML = `
+        <div class="scent-name">${p.name}</div>
+        <div class="scent-notes">${p.type} · ${p.usage}</div>
+        <div class="scent-desc">${p.desc}</div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  // ----- 향 추천 화면 업데이트 -----
+  function updateScentUI(profile) {
+    const keywordEl = document.getElementById('scent-keyword');
+    const nameEl = document.getElementById('main-scent-name');
+    const notesEl = document.getElementById('main-scent-notes');
+    const descEl = document.getElementById('main-scent-desc');
+    const metaEl = document.getElementById('main-scent-meta');
+
+    if (!keywordEl || !nameEl || !notesEl || !descEl || !metaEl) return null;
+
+    const config = getScentConfig(profile);
+
+    keywordEl.textContent = config.keyword;
+    nameEl.textContent = config.name;
+    notesEl.textContent = config.notes;
+    descEl.textContent = config.desc;
+    metaEl.textContent =
+      `기준: 긴장도 ${profile.tension} · 활력 ${profile.vitality} · 집중력 ${profile.focus} · 예민도 ${profile.sensitivity} · 피로도 ${profile.fatigue}`;
+
+    // 제품 라인업도 함께 업데이트
+    renderProductList(config.products || []);
+
+    return config;
+  }
+
+  // ----- 히스토리 저장 / 로드 -----
+  const HISTORY_KEY = 'emotion-scent-history-v1';
+
+  function saveHistory(profile, config) {
+    try {
+      const prev = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+      const entry = {
+        date: new Date().toISOString(),
+        profile,
+        scentName: config.name,
+        keyword: config.keyword
+      };
+      prev.push(entry);
+      // 최근 20개만 유지
+      if (prev.length > 20) {
+        prev.splice(0, prev.length - 20);
+      }
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(prev));
+    } catch (e) {
+      console.warn('히스토리 저장 실패:', e);
+    }
+  }
+
+  function loadHistory() {
+    try {
+      return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+    } catch (e) {
+      console.warn('히스토리 로드 실패:', e);
+      return [];
+    }
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    try {
+      const d = new Date(iso);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mm = String(d.getMinutes()).padStart(2, '0');
+      return `${y}.${m}.${day} ${hh}:${mm}`;
+    } catch {
+      return iso;
+    }
+  }
+
+  // 히스토리 화면 렌더링
+  function renderHistoryList() {
+    const container = document.getElementById('history-list');
+    if (!container) return;
+
+    const list = loadHistory();
+
+    container.innerHTML = '';
+
+    if (!list.length) {
+      const empty = document.createElement('div');
+      empty.className = 'scent-card';
+      empty.innerHTML = `
+        <div class="scent-desc">
+          아직 저장된 기록이 없습니다.<br>
+          감정 측정을 완료하면 이곳에 기록이 쌓입니다.
+        </div>
+      `;
+      container.appendChild(empty);
+      return;
+    }
+
+    // 최신 기록이 위로 오도록 뒤집기
+    const reversed = [...list].reverse();
+
+    reversed.forEach((item) => {
+      const { date, profile, scentName, keyword } = item;
+      const card = document.createElement('div');
+      card.className = 'scent-card';
+
+      card.innerHTML = `
+        <div class="history-date">${formatDate(date)}</div>
+        <div class="scent-name">${scentName}</div>
+        <div class="scent-desc">${keyword}</div>
+        <div class="scent-meta">
+          긴장 ${profile.tension} · 활력 ${profile.vitality} · 집중 ${profile.focus} ·
+          예민 ${profile.sensitivity} · 피로 ${profile.fatigue}
+        </div>
+        <div class="history-chip">
+          <span>🧠</span>
+          <span>요약: ${buildSummary(profile)}</span>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  // ----- 이벤트 바인딩 -----
+  document.addEventListener('DOMContentLoaded', () => {
+    // 처음에는 0번 화면만 표시 (Onboarding)
+    showScreen(0);
+
+    document.addEventListener('click', (event) => {
+      const analyzeBtn = event.target.closest('[data-action="analyze-emotion"]');
+      if (analyzeBtn) {
+        // 1) 슬라이더 → 감정 프로필 계산
+        const profile = calculateEmotionFromSliders();
+        if (profile) {
+          emotionProfile = profile;
+          updateEmotionResultUI(profile);
+          const config = updateScentUI(profile);
+          if (config) {
+            saveHistory(profile, config);
+          }
+        }
+
+        // 2) 분석 중 화면으로 이동 (index 2)
+        const nextIndex = parseInt(
+          analyzeBtn.getAttribute('data-next-screen') || '2',
+          10
+        );
+        showScreen(nextIndex);
+
+        // 3) 1.4초 후 결과 화면(3)으로 이동
+        setTimeout(() => {
+          showScreen(3);
+        }, 1400);
+
+        return;
+      }
+
+      // 일반적인 다음 화면 이동 버튼 처리
+      const btn = event.target.closest('[data-next-screen]');
+      if (!btn) return;
+
+      const nextIndex = parseInt(btn.getAttribute('data-next-screen'), 10);
+      if (!isNaN(nextIndex)) {
+        showScreen(nextIndex);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
